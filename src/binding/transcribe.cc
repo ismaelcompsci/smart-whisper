@@ -228,6 +228,11 @@ class TranscribeWorker : public Napi::AsyncProgressQueueWorker<int> {
                                                               context, state, i, j)));
                 token_object.Set("id", Napi::Number::New(Env(), token.id));
                 token_object.Set("p", Napi::Number::New(Env(), token.p));
+                token_object.Set("t_dtw", Napi::Number::New(Env(), token.t_dtw));
+                if (params.token_timestamps) {
+                    token_object.Set("from", Napi::Number::New(Env(), token.t0 * 10));
+                    token_object.Set("to", Napi::Number::New(Env(), token.t1 * 10));
+                }
                 tokens_array.Set(j, token_object);
 
                 if (token.id > whisper_token_eot(context)) {
@@ -282,6 +287,7 @@ class TranscribeWorker : public Napi::AsyncProgressQueueWorker<int> {
                                                              context, state, i, j)));
                     token_object.Set("id", Napi::Number::New(Env(), token.id));
                     token_object.Set("p", Napi::Number::New(Env(), token.p));
+                    token_object.Set("t_dtw", Napi::Number::New(Env(), token.t_dtw));
                     if (params.token_timestamps) {
                         token_object.Set("from", Napi::Number::New(Env(), token.t0 * 10));
                         token_object.Set("to", Napi::Number::New(Env(), token.t1 * 10));

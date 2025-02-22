@@ -93,6 +93,8 @@ export interface TranscribeDetailedResult<TokenTimestamp extends boolean>
 		from: TokenTimestamp extends true ? number : undefined;
 		/** The end timestamp of the token, in milliseconds. Only available when `token_timestamps` of {@link TranscribeParams} is `true`. */
 		to: TokenTimestamp extends true ? number : undefined;
+		/** [EXPERIMENTAL] Token-level timestamps with DTW. Do not use if you haven't computed token-level timestamps with dtw. Roughly corresponds to the moment in audio in which the token was output */
+		t_dtw: number;
 	}[];
 }
 

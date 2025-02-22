@@ -12,6 +12,51 @@ export type Handle = {
 	readonly "": unique symbol;
 };
 
+export enum WhisperAligmentHeadsPreset {
+	NONE = 0,
+	WHISPER_AHEADS_N_TOP_MOST = 1, // All heads from the N-top-most text-layers
+	WHISPER_AHEADS_CUSTOM = 2,
+	WHISPER_AHEADS_TINY_EN = 3,
+	WHISPER_AHEADS_TINY = 4,
+	WHISPER_AHEADS_BASE_EN = 5,
+	WHISPER_AHEADS_BASE = 6,
+	WHISPER_AHEADS_SMALL_EN = 7,
+	WHISPER_AHEADS_SMALL = 8,
+	WHISPER_AHEADS_MEDIUM_EN = 9,
+	WHISPER_AHEADS_MEDIUM = 10,
+	WHISPER_AHEADS_LARGE_V1 = 11,
+	WHISPER_AHEADS_LARGE_V2 = 12,
+	WHISPER_AHEADS_LARGE_V3 = 13,
+}
+
+export interface WhisperContextParams {
+	use_gpu?: boolean;
+	flash_attn?: boolean;
+	gpu_device?: number;
+	dtw_token_timestamps?: boolean;
+	dtw_aheads_preset?: WhisperAligmentHeadsPreset;
+	dtw_n_top?: number;
+	dtw_mem_size?: number;
+	offload?: number;
+}
+
+export interface WhisperConfig {
+	/**
+	 * Whether to use GPU acceleration (if available)
+	 * @default true
+	 */
+	gpu?: boolean;
+	/**
+	 * Time in seconds after which the model is freed from memory
+	 * @default 0 (disabled)
+	 */
+	offload?: number;
+	/**
+	 * Advanced configuration parameters
+	 */
+	params?: WhisperContextParams;
+}
+
 export namespace Binding {
 	/**
 	 * Load a model from a whisper weights file.
@@ -64,10 +109,9 @@ export namespace Binding {
 		/**
 		 * Load a model from a whisper weights file.
 		 * @param file The path to the whisper weights file.
-		 * @param gpu Whether to use the GPU or not.
-		 * @returns A promise that resolves to a {@link WhisperModel}.
+		 * @param config Configuration for the model or boolean for GPU usage
 		 */
-		static load(file: string, gpu?: boolean): Promise<WhisperModel>;
+		static load(file: string, config?: WhisperConfig | boolean): Promise<WhisperModel>;
 	}
 }
 
